@@ -79,7 +79,7 @@ function checkout() {
     const cartItems = cart.map(item => `${item.name} - Rp ${item.price.toLocaleString()} x ${item.quantity}`)
         .join('\n');
     const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-    const message = `Pesanan:\n${cartItems}\n\nTotal: Rp ${totalPrice.toLocaleString()}`;
+    const message = `Pesanan Atas Nama: *(Tulis Nama Pesanan)*\n${cartItems}\n\nTotal: Rp ${totalPrice.toLocaleString()}`;
     const whatsappUrl = `https://wa.me/6287875369113?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     cart = [];
