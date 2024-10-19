@@ -1,0 +1,474 @@
+<html>
+
+<head>
+    <title>Menu Makanan dan Minuman</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 24px;
+            position: relative;
+        }
+        
+        .cart-icon {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .cart-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        
+        .language-selector {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .language-selector select {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        
+        .card h2 {
+            margin-top: 0;
+        }
+        
+        .item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+        
+        .item .details {
+            flex-grow: 1;
+        }
+        
+        .item .details h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .item .details p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+        
+        .item .buy-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            .item {
+                flex-direction: row;
+                align-items: center;
+            }
+            .item img {
+                margin-bottom: 0;
+            }
+            .item .buy-button {
+                width: auto;
+                text-align: center;
+            }
+            .header {
+                font-size: 20px;
+                padding: 10px 0;
+            }
+            .cart-icon {
+                right: 10px;
+                top: 10px;
+                font-size: 20px;
+            }
+            .cart-icon .badge {
+                top: -3px;
+                right: -3px;
+                padding: 1px 4px;
+                font-size: 10px;
+            }
+            .language-selector {
+                left: 10px;
+                top: 10px;
+                font-size: 14px;
+            }
+            .language-selector select {
+                font-size: 14px;
+                padding: 3px 8px;
+            }
+        }
+        
+        .modal-header {
+            border-bottom: none;
+        }
+        
+        .modal-footer {
+            border-top: none;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .modal-body p {
+            font-size: 18px;
+        }
+        
+        .input-group .btn {
+            border-radius: 0;
+        }
+        
+        .input-group .form-control {
+            border-radius: 0;
+        }
+        
+        .quantity-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-buttons button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-buttons input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 0 10px;
+            height: 40px;
+        }
+        
+        .quantity-label {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="language-selector">
+            <select id="languageSelect" onchange="changeLanguage()">
+                <option value="id">ID</option>
+                <option value="en">EN</option>
+            </select>
+        </div>
+        <span id="headerTitle">Menu Makanan dan Minuman</span>
+        <i class="fas fa-shopping-cart cart-icon" onclick="openCart()">
+            <span class="badge" id="cartBadge">0</span>
+        </i>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2 id="minumanTitle">Minuman</h2>
+            <div class="item">
+                <img alt="Es Teh Manis" height="50" id="imgEsTehManis" src="https://storage.googleapis.com/a1aa/image/9XJ9lldGmjYeN6DZ6K12q61fyOBhpIT38KSToiXOvCeeEVecC.jpg" width="50" />
+                <div class="details">
+                    <h3>Es Teh Manis</h3>
+                    <p id="hargaEsTehManis">Harga: Rp 10,000</p>
+                </div>
+                <button class="buy-button" onclick="openModal('Es Teh Manis', 10000)">Beli</button>
+            </div>
+            <div class="item">
+                <img alt="Kopi" height="50" id="imgKopi" src="https://storage.googleapis.com/a1aa/image/9XJ9lldGmjYeN6DZ6K12q61fyOBhpIT38KSToiXOvCeeEVecC.jpg" width="50" />
+                <div class="details">
+                    <h3>Kopi</h3>
+                    <p id="hargaKopi">Harga: Rp 15,000</p>
+                </div>
+                <button class="buy-button" onclick="openModal('Kopi', 15000)">Beli</button>
+            </div>
+            <div class="item">
+                <img alt="Jus Jeruk" height="50" id="imgJusJeruk" src="https://storage.googleapis.com/a1aa/image/Kjdm3zHxBMpfWCgnFZfWdHNtvagtRb5MuDqtbsZYDhrRRlnTA.jpg" width="50" />
+                <div class="details">
+                    <h3>Jus Jeruk</h3>
+                    <p id="hargaJusJeruk">Harga: Rp 20,000</p>
+                </div>
+                <button class="buy-button" onclick="openModal('Jus Jeruk', 20000)">Beli</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2 id="makananTitle">Makanan</h2>
+            <div class="item">
+                <img alt="Nasi Goreng" height="50" id="imgNasiGoreng" src="https://storage.googleapis.com/a1aa/image/lEPgK88zqH4fLCW4sgWTblgjkk4DASm8xGUpCG0evaqURlnTA.jpg" width="50" />
+                <div class="details">
+                    <h3>Nasi Goreng</h3>
+                    <p id="hargaNasiGoreng">Harga: Rp 25,000</p>
+                </div>
+                <button class="buy-button" onclick="openModal('Nasi Goreng', 25000)">Beli</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © <span id="currentYear"></span> Restoran Kita
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="buyModalLabel">Konfirmasi Pembelian</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="itemName"></p>
+                    <p id="itemPrice"></p>
+                    <div class="quantity-buttons">
+                        <span class="quantity-label">Jumlah:</span>
+                        <button onclick="decreaseQuantity()">-</button>
+                        <input type="text" id="itemQuantity" value="1" readonly>
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                    <p class="mt-3">Total: Rp <span id="totalPrice"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelButton">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="addToCart()" id="addToCartButton">Masukkan ke
+                        Keranjang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Keranjang Belanja</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="cartItems" class="list-group">
+                        <!-- Cart items will be added here dynamically -->
+                    </ul>
+                    <p class="mt-3">Total: Rp <span id="cartTotalPrice">0</span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="checkout()" id="checkoutButton">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentItem = '';
+        let currentPrice = 0;
+        let currentQuantity = 1;
+        let cart = [];
+
+        function openModal(item, price) {
+            currentItem = item;
+            currentPrice = price;
+            currentQuantity = 1;
+            document.getElementById('itemName').innerText = 'Item: ' + item;
+            document.getElementById('itemPrice').innerText = 'Harga: Rp ' + price.toLocaleString();
+            document.getElementById('itemQuantity').value = currentQuantity;
+            document.getElementById('totalPrice').innerText = (price * currentQuantity).toLocaleString();
+            $('#buyModal').modal('show');
+        }
+
+        function increaseQuantity() {
+            currentQuantity++;
+            document.getElementById('itemQuantity').value = currentQuantity;
+            document.getElementById('totalPrice').innerText = (currentPrice * currentQuantity).toLocaleString();
+        }
+
+        function decreaseQuantity() {
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                document.getElementById('itemQuantity').value = currentQuantity;
+                document.getElementById('totalPrice').innerText = (currentPrice * currentQuantity).toLocaleString();
+            }
+        }
+
+        function addToCart() {
+            const existingItemIndex = cart.findIndex(item => item.name === currentItem);
+            if (existingItemIndex !== -1) {
+                cart[existingItemIndex].quantity += currentQuantity;
+            } else {
+                const item = {
+                    name: currentItem,
+                    price: currentPrice,
+                    quantity: currentQuantity
+                };
+                cart.push(item);
+            }
+            updateCart();
+            $('#buyModal').modal('hide');
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = '';
+            let totalPrice = 0;
+            cart.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                listItem.innerHTML = `
+                    ${item.name} - Rp ${item.price.toLocaleString()} x ${item.quantity}
+                    <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Hapus</button>
+                `;
+                cartItems.appendChild(listItem);
+                totalPrice += item.price * item.quantity;
+            });
+            document.getElementById('cartTotalPrice').innerText = totalPrice.toLocaleString();
+            document.getElementById('cartBadge').innerText = cart.length;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function openCart() {
+            $('#cartModal').modal('show');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Keranjang belanja kosong!');
+                return;
+            }
+            const cartItems = cart.map(item => `${item.name} - Rp ${item.price.toLocaleString()} x ${item.quantity}`)
+                .join('\n');
+            const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            const message = `Pesanan:\n${cartItems}\n\nTotal: Rp ${totalPrice.toLocaleString()}`;
+            const whatsappUrl = `https://wa.me/yourphonenumber?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            cart = [];
+            updateCart();
+            $('#cartModal').modal('hide');
+        }
+
+        function updateYear() {
+            const yearSpan = document.getElementById('currentYear');
+            const currentYear = new Date().getFullYear();
+            yearSpan.innerText = currentYear;
+        }
+
+        function changeLanguage() {
+            const language = document.getElementById('languageSelect').value;
+            if (language === 'en') {
+                document.getElementById('headerTitle').innerText = 'Food and Drink Menu';
+                document.getElementById('minumanTitle').innerText = 'Drinks';
+                document.getElementById('makananTitle').innerText = 'Food';
+                document.getElementById('hargaEsTehManis').innerText = 'Price: Rp 10,000';
+                document.getElementById('hargaKopi').innerText = 'Price: Rp 15,000';
+                document.getElementById('hargaJusJeruk').innerText = 'Price: Rp 20,000';
+                document.getElementById('hargaNasiGoreng').innerText = 'Price: Rp 25,000';
+                document.getElementById('buyModalLabel').innerText = 'Purchase Confirmation';
+                document.getElementById('addToCartButton').innerText = 'Add to Cart';
+                document.getElementById('cancelButton').innerText = 'Cancel';
+                document.getElementById('closeButton').innerText = 'Close';
+                document.getElementById('checkoutButton').innerText = 'Checkout';
+                document.querySelector('.quantity-label').innerText = 'Quantity:';
+            } else {
+                document.getElementById('headerTitle').innerText = 'Menu Makanan dan Minuman';
+                document.getElementById('minumanTitle').innerText = 'Minuman';
+                document.getElementById('makananTitle').innerText = 'Makanan';
+                document.getElementById('hargaEsTehManis').innerText = 'Harga: Rp 10,000';
+                document.getElementById('hargaKopi').innerText = 'Harga: Rp 15,000';
+                document.getElementById('hargaJusJeruk').innerText = 'Harga: Rp 20,000';
+                document.getElementById('hargaNasiGoreng').innerText = 'Harga: Rp 25,000';
+                document.getElementById('buyModalLabel').innerText = 'Konfirmasi Pembelian';
+                document.getElementById('addToCartButton').innerText = 'Masukkan ke Keranjang';
+                document.getElementById('cancelButton').innerText = 'Batal';
+                document.getElementById('closeButton').innerText = 'Tutup';
+                document.getElementById('checkoutButton').innerText = 'Checkout';
+                document.querySelector('.quantity-label').innerText = 'Jumlah:';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateYear);
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html
