@@ -80,7 +80,7 @@ function checkout() {
         .join('\n');
     const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     const message = `Pesanan:\n${cartItems}\n\nTotal: Rp ${totalPrice.toLocaleString()}`;
-    const whatsappUrl = `https://wa.me/087875369113?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/6287875369113?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     cart = [];
     updateCart();
